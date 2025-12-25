@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>設備機器一覧</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { font-family: "Hiragino Kaku Gothic Pro", "Meiryo", "Yu Gothic", sans-serif; }
+        tr.clickable-row { cursor: pointer; }
+    </style>
+</head>
+<body class="bg-light">
+
+<!-- Navbar chuẩn Nhật -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="/">🏭 工場保全システム</a>
+        <div class="navbar-nav ms-auto">
+            <a class="nav-link" href="/">ダッシュボード</a>
+            <a class="nav-link active" href="/machines">機器一覧</a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="text-primary mb-0">🏭 設備機器一覧</h2>
+        <a href="/machines/add" class="btn btn-success">
+            + 新規登録
+        </a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <table class="table table-hover table-bordered">
+                <thead class="table-dark">
+                <tr>
+                    <th class="text-center">ID</th>
+                    <th>管理コード</th>
+                    <th>機器名称</th>
+                    <th>設置場所</th>
+                    <th class="text-center">状態</th>
+                    <th>次回点検日</th>
+                    <th class="text-center">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="machine : ${listMachines}">
+                    <td th:text="${machine.id}" class="text-center">1</td>
+                    <td th:text="${machine.code}" class="fw-bold">M01</td>
+                    <td>
+                        <a th:href="@{/machines/{id}(id=${machine.id})}" class="text-decoration-none fw-bold">
+                            <span th:text="${machine.name}"></span>
+                        </a>
+                    </td>
+                    <td th:text="${machine.location}"></td>
+                    <td class="text-center">
+                        <span th:text="${machine.status == 'ACTIVE' ? '稼働中' : '点検中'}"
+                              th:class="${machine.status == 'ACTIVE' ? 'badge bg-success' : 'badge bg-warning text-dark'}">
+                        </span>
+                    </td>
+                    <td th:text="${machine.nextMaintenanceDate}"></td>
+                    <td class="text-center">
+                        <a th:href="@{/machines/{id}(id=${machine.id})}" class="btn btn-sm btn-info text-white">
+                            詳細
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <div th:if="${#lists.isEmpty(listMachines)}" class="alert alert-info text-center">
+                データがありません。
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
